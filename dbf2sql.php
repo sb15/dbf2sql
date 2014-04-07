@@ -9,6 +9,8 @@ http://twitter.com/xtranophilist
 utilizes DBF reader Class by Faro K Rasyid
 */
 
+ini_set('memory_limit', '4000M');
+
 require_once("sys/base_class.php");
 
 function displayHelp() {
@@ -74,7 +76,7 @@ for($j=0; $j<$num_field; $j++) {
     //add size in paranthesis only if varchar
     $t=($dbf->dbf_names[$j]['type']=='C')?"(".$dbf->dbf_names[$j]['len'].")":'';
     //append each field entry into array
-    $ta[]=" ".strtolower($dbf->dbf_names[$j]['name'])." ".$type[$dbf->dbf_names[$j]['type']].$t;
+    $ta[]=" `".strtolower($dbf->dbf_names[$j]['name'])."` ".$type[$dbf->dbf_names[$j]['type']].$t;
 }
 //create query from the array of fields
 fwrite($h,$cq.implode(',',$ta).");\n\n");
@@ -96,7 +98,7 @@ for($i=0; $i<$num_rec; $i++) {
     $ta=array();
     for($j=0; $j<$num_field; $j++) {
         //append each field value to the array with single quote after escaping it
-        $ta[]="'".doEscape($row[$j])."'";
+        $ta[]="'".iconv('CP866', 'UTF-8', doEscape($row[$j]))."'";
     }
     //insert row query
     fwrite($h,$fi.implode(',',$ta).");\n");
